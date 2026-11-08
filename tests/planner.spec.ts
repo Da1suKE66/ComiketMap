@@ -2,17 +2,17 @@ import { test, expect, type Page } from "@playwright/test";
 import { demoData } from "../lib/demo";
 
 const pixel = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a84sAAAAASUVORK5CYII=", "base64");
-async function open(page: Page) { await page.goto("/"); await expect(page.getByText("先逛逛示例手帐", { exact: true })).toBeVisible(); }
+async function open(page: Page) { await page.goto("/"); await expect(page.getByText("先逛逛示例手帐", { exact: true })).toBeVisible(); await page.getByRole("button", { name: "拓扑图", exact: true }).click(); }
 async function stored(page: Page) {
   return page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => { const r = indexedDB.open("comipath-c109", 1); r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error); });
     return new Promise<ReturnType<typeof demoData>>(resolve => { const r = db.transaction("notebook").objectStore("notebook").get("data"); r.onsuccess = () => { db.close(); resolve(r.result); }; });
   });
 }
-test("all eight halls, three days and independent hall visibility work", async ({ page }) => {
+test("all twelve halls, three days and independent hall visibility work", async ({ page }) => {
   const errors: string[] = []; page.on("pageerror", e => errors.push(e.message)); await open(page);
   await expect(page.locator(".booth-card")).toHaveCount(6);
-  await expect(page.locator(".hall-tabs button")).toHaveCount(9);
+  await expect(page.locator(".hall-tabs button")).toHaveCount(13);
   await page.getByRole("button", { name: "DAY 2 12.30", exact: true }).click(); await expect(page.locator(".booth-card")).toHaveCount(3);
   await page.getByRole("button", { name: "DAY 3 12.31", exact: true }).click(); await expect(page.locator(".booth-card")).toHaveCount(3);
   await page.getByRole("button", { name: "全部日期", exact: true }).click(); await expect(page.locator(".booth-card")).toHaveCount(12);

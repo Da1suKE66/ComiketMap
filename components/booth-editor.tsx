@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import { ArrowUpRight, Check, ImagePlus, MapPin, Plus, Save, ShoppingBag, Trash2, UserRound, X } from "lucide-react";
 import Modal from "./modal";
-import { DAYS, HALLS, PRIORITIES, boothSchema, itemPurchased, itemTotal, newItem, totals, uid, yen, type Booth, type ImageAsset, type Item, type Recipient } from "@/lib/model";
+import { DAYS, HALLS, PRIORITIES, isCorporate, boothSchema, itemPurchased, itemTotal, newItem, totals, uid, yen, type Booth, type ImageAsset, type Item, type Recipient } from "@/lib/model";
 import { readImage } from "@/lib/db";
 
 export default function BoothEditor({ booth, recipients, onSave, onClose, onDelete }: { booth: Booth; recipients: Recipient[]; onSave: (b: Booth, recipients: Recipient[]) => void; onClose: () => void; onDelete?: () => void }) {
@@ -38,12 +38,12 @@ export default function BoothEditor({ booth, recipients, onSave, onClose, onDele
       <div className="editor-tabs"><button className={tab === "info" ? "active" : ""} onClick={() => setTab("info")}><MapPin size={15} />摊位信息</button><button className={tab === "images" ? "active" : ""} onClick={() => setTab("images")}><ImagePlus size={15} />品书图片 <small>{b.images.length}</small></button><button className={tab === "items" ? "active" : ""} onClick={() => setTab("items")}><ShoppingBag size={15} />购买与代购 <small>{b.items.length}</small></button></div>
       <div className="editor-body">
         {tab === "info" && <div className="form-grid">
-          <label>サークル / 社团名称 <em>*</em><input autoFocus maxLength={120} value={b.circle} placeholder="例如：雨の日レコード" onChange={e => patch({ circle: e.target.value })} /></label>
+          <label>{isCorporate(b.hall) ? "企业／品牌名称" : "サークル / 社团名称"} <em>*</em><input autoFocus maxLength={120} value={b.circle} placeholder="例如：雨の日レコード" onChange={e => patch({ circle: e.target.value })} /></label>
           <label>画师名称<input maxLength={500} value={b.artist} placeholder="画师的昵称" onChange={e => patch({ artist: e.target.value })} /></label>
           <label>参加日期 <em>*</em><select value={b.day} onChange={e => patch({ day: Number(e.target.value) as Booth["day"] })}>{DAYS.map(d => <option key={d.id} value={d.id}>{d.label} · {d.full}（{d.weekday}）</option>)}</select></label>
-          <label>所在场馆 <em>*</em><select value={b.hall} onChange={e => patch({ hall: e.target.value as Booth["hall"], x: null, y: null })}>{HALLS.map(h => <option key={h.id} value={h.id}>{h.name} 馆 / {h.en}</option>)}</select></label>
-          <label>区域 / ブロック <em>*</em><input maxLength={8} value={b.block} placeholder="例如：ア、A、あ、a" onChange={e => patch({ block: e.target.value })} /></label>
-          <label>摊位号 / スペース <em>*</em><input maxLength={4} value={b.space} placeholder="例如：24a、08b、12ab" onChange={e => patch({ space: e.target.value })} /></label>
+          <label>所在场馆 <em>*</em><select value={b.hall} onChange={e => patch({ hall: e.target.value as Booth["hall"], x: null, y: null })}>{HALLS.map(h => <option key={h.id} value={h.id}>{h.name} 馆 / {h.en}{isCorporate(h.id) ? " · 4F 企业" : " · 1F 同人"}</option>)}</select></label>
+          <label>区域 / ブロック {!isCorporate(b.hall) && <em>*</em>}<input maxLength={8} value={b.block} placeholder={isCorporate(b.hall) ? "企业馆可留空" : "例如：ア、A、あ、a"} onChange={e => patch({ block: e.target.value })} /></label>
+          <label>{isCorporate(b.hall) ? "企业编号" : "摊位号 / スペース"} <em>*</em><input maxLength={5} value={b.space} placeholder={isCorporate(b.hall) ? "例如：1111、2141" : "例如：24a、08b、12ab"} onChange={e => patch({ space: e.target.value })} /></label>
           <label>画师粉丝数<input type="number" min="0" max="2000000000" step="1" value={b.fans ?? ""} placeholder="暂不清楚可留空" onChange={e => patch({ fans: e.target.value === "" ? null : Number(e.target.value) })} /><small>仅作参考，不会自动更改你的优先级。</small></label>
           <label>X 用户名<input maxLength={120} value={b.xHandle} placeholder="@username（手动记录）" onChange={e => patch({ xHandle: e.target.value })} /></label>
           <div className="form-full"><label>我的优先级</label><div className="priority-options">{Object.entries(PRIORITIES).map(([key, p]) => <button key={key} className={b.priority === key ? "selected" : ""} onClick={() => patch({ priority: key as Booth["priority"] })}><span className={`priority-letter priority-${key}`}>{p.short}</span>{p.label}{b.priority === key && <Check size={14} />}</button>)}</div></div>

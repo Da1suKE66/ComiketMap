@@ -38,6 +38,7 @@ test("chosen file receives complete data and later edits; persisted handle reloa
     await new Promise<void>(resolve => { const tx = db.transaction("notebook", "readwrite"); tx.objectStore("notebook").delete("data"); tx.oncomplete = () => { db.close(); resolve(); }; });
   });
   await page.reload(); await expect(page.getByText("已写回 ComiPath-C109.json", { exact: true })).toBeVisible(); await page.getByRole("button", { name: "购买清单", exact: true }).click(); await expect(a.getByRole("spinbutton")).toHaveValue("1");
+  await page.getByRole("button", { name: "场馆地图", exact: true }).click(); await page.getByRole("button", { name: /^我的路线/ }).click(); await page.getByRole("button", { name: "清空路线", exact: true }).click(); await page.getByLabel("添加路线目标").selectOption("hall:west4"); await page.getByRole("button", { name: "加入路线", exact: true }).click(); await expect(page.getByText("已写回 ComiPath-C109.json", { exact: true })).toBeVisible(); expect((await fileData(page)).routePlans["1"].stops).toEqual(["hall:west4"]); await page.getByLabel("路线起点").selectOption("eastEntry1"); await page.getByLabel("跨区走法").selectOption("indoor"); await expect(page.getByText("已写回 ComiPath-C109.json", { exact: true })).toBeVisible(); const savedPlan=(await fileData(page)).routePlans["1"]; expect(savedPlan.start).toBe("eastEntry1"); expect(savedPlan.transfer).toBe("indoor");
 });
 test("opening an existing file previews before replacing and then writes future changes back to that file", async ({ page }) => {
   await start(page); const other = demoData(); other.booths[0].circle = "磁盘上的社团";

@@ -17,7 +17,7 @@ export function demoData(): AppData {
   const booths: Booth[] = rows.map((r, index) => {
     const items: Item[] = index % 3 === 2 ? [] : [{ id: `demo-item-${index}`, name: index === 0 ? "雨のあとで · 新刊" : index === 1 ? "冬の栞 · イラスト集" : "冬コミ新刊セット", kind: index === 1 ? "画集" : "本子", price: index === 3 ? null : [1000, 1500, 800, 2000][index % 4], selfQuantity: 1, selfPurchased: 0,
       orders: index === 0 ? [{ id: "demo-order-a", recipientId: "recipient-a", quantity: 1, purchased: 0 }, { id: "demo-order-b", recipientId: "recipient-b", quantity: 1, purchased: 0 }] : index === 1 ? [{ id: "demo-order-c", recipientId: "recipient-a", quantity: 2, purchased: 0 }] : [] }];
-    return { id: `demo-booth-${index}`, circle: r[0], artist: r[1], hall: r[2], block: r[3], space: r[4], priority: r[5], fans: r[6], x: r[7], y: r[8], day: r[9], status: items.length ? "published" : "pending", visit: "planned", xHandle: "", notes: index === 0 ? "新刊优先，记得分别给 A 和 B 各带一本。这里是虚构示例，可自由编辑。" : "虚构演示摊位，地点与坐标仅供体验。", images: index === 0 ? [{ id: "demo-image", name: "示例品书.svg", src: "/demo-menu.svg" }] : [], items };
+    return { id: `demo-booth-${index}`, circle: r[0], artist: r[1], hall: r[2], block: r[3], space: r[4], priority: r[5], fans: r[6], x: r[7], y: r[8], mapVersion: "venue-2026-v1", day: r[9], status: items.length ? "published" : "pending", visit: "planned", xHandle: "", notes: index === 0 ? "新刊优先，记得分别给 A 和 B 各带一本。这里是虚构示例，可自由编辑。" : "虚构演示摊位，地点与坐标仅供体验。", images: index === 0 ? [{ id: "demo-image", name: "示例品书.svg", src: "/demo-menu.svg" }] : [], items };
   });
   return { version: 1, demo: true, updatedAt: new Date().toISOString(), booths, recipients: [{ id: "recipient-a", name: "A", note: "示例代购对象" }, { id: "recipient-b", name: "B", note: "示例代购对象" }], floorplans: {} };
 }

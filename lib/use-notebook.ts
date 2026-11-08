@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { loadData, loadFileHandle, saveData, saveFileHandle } from "./db";
 import { demoData } from "./demo";
 import { dataSchema, emptyData, type AppData } from "./model";
+import { cleanRoutePlans } from "./routes";
 import { createNotebookFile, grantFilePermission, isPickerCancelled, pickOpenFile, pickSaveFile, readNotebookFile, supportsLocalFiles, writeNotebookFile, type FileBinding, type NotebookFileHandle } from "./local-file";
 
 function hasRecoveryChanges(cached: AppData, disk: AppData) {
@@ -59,7 +60,7 @@ export default function useNotebook(notify: (message: string) => void) {
     window.addEventListener("beforeunload", prevent); return () => window.removeEventListener("beforeunload", prevent);
   }, [saveState]);
   function change(next: AppData) {
-    const result = dataSchema.safeParse({ ...next, updatedAt: new Date().toISOString() });
+    const result = dataSchema.safeParse({ ...cleanRoutePlans(next), updatedAt: new Date().toISOString() });
     if (!result.success) { notifyRef.current(result.error.issues[0]?.message ?? "数据校验失败"); return false; }
     const value = result.data; update(value); setLoadError(""); setSaveState("saving"); dirty.current = true; const current = ++revision.current;
     void enqueue(async () => {

@@ -1,0 +1,158 @@
+{
+  "checked": "2026-11-09",
+  "coordinate_system": "Diagram units, not metres",
+  "sources": {
+    "c109": {
+      "url": "https://www.comiket.co.jp/info-c/C109/C109AppealEnclosure.pdf",
+      "sha256": "88710b15415cf82790ff4f039df66f0756f2ad1e38b082f63565bb853676a63e",
+      "http_status": 200,
+      "pages": 5
+    },
+    "corporate": {
+      "url": "https://www.comiket.co.jp/info-a/C108/C108kigyou/C108Kigyou_Booth_Pamphlet.pdf",
+      "sha256": "d216e3a69a762fe5c4187757e6c86233091547cbbb0a81d1ee35bfd3379dc832",
+      "http_status": 200,
+      "pages": 44
+    },
+    "building": {
+      "url": "https://www.bigsight.jp/download/pdf/bigsight_map_color_j.pdf",
+      "sha256": "c39d68ce6439df045ad645ce2bd49169983ebcbf426fba477e9d338930481c28",
+      "http_status": 200,
+      "pages": 1
+    },
+    "entry": {
+      "url": "https://www.comiket.co.jp/info-a/C108/C108CtlgNotes.pdf",
+      "sha256": "88c41ea4ac9e9f1788817b2c32afe5190fc5e139cc7ad0bf7b7062746e569d4e",
+      "http_status": 200,
+      "pages": 55,
+      "reference_pages": [
+        10,
+        11,
+        18,
+        19
+      ]
+    }
+  },
+  "not_published_checks": [
+    {
+      "url": "https://www.comiket.co.jp/info-a/C109/C109CtlgMap.html",
+      "status": 404
+    },
+    {
+      "url": "https://www.comiket.co.jp/info-a/C109/C109kigyou/C109Kigyou_Booth_Pamphlet.pdf",
+      "status": 404
+    },
+    {
+      "url": "https://www.comiket.co.jp/info-a/C109/C109EntryTicket2.html",
+      "status": 404
+    },
+    {
+      "url": "https://www.comiket.co.jp/info-a/C109/C109CtlgNotes.pdf",
+      "status": 404
+    }
+  ],
+  "maps": [
+    {
+      "hall": "east1",
+      "file": "east1.webp",
+      "width": 2159,
+      "height": 2401,
+      "source": "c109",
+      "sha256": "b5558f817092ce1fb9c093485ac0fa1066261ee77c45d51823539f93f20f3155"
+    },
+    {
+      "hall": "east2",
+      "file": "east2.webp",
+      "width": 2011,
+      "height": 2401,
+      "source": "c109",
+      "sha256": "6706f2d70411755298709b2d9ecf52955615462858a6fa5c904c9616a73275e4"
+    },
+    {
+      "hall": "east3",
+      "file": "east3.webp",
+      "width": 2095,
+      "height": 2401,
+      "source": "c109",
+      "sha256": "7354ed801143b58384f07e06e071e3388df63b9ca5c310c67f85ed5d4c840cc3"
+    },
+    {
+      "hall": "east7",
+      "file": "east7.webp",
+      "width": 2401,
+      "height": 2401,
+      "source": "c109",
+      "sha256": "5037caa7501adfdcbaa701b97dd89bc49601956f8524f0208846b0f2ec594771"
+    },
+    {
+      "hall": "south1",
+      "file": "south1.webp",
+      "width": 2401,
+      "height": 2130,
+      "source": "c109",
+      "sha256": "a9142a26301d7cd0bee686d0e3d8656b17879ee8919dacc71fca01d72a982f0e"
+    },
+    {
+      "hall": "south2",
+      "file": "south2.webp",
+      "width": 2401,
+      "height": 2062,
+      "source": "c109",
+      "sha256": "1a7f1c2b4cc93691f7f991f646fd42f77f9fac2955c7205f9b1a38295e6a30bd"
+    },
+    {
+      "hall": "south3",
+      "file": "south3.webp",
+      "width": 2401,
+      "height": 2235,
+      "source": "corporate",
+      "sha256": "cde9f3c3d0debe067d7793d0edd416c91b9574f37a2c6865e9c1149a77b1d596"
+    },
+    {
+      "hall": "south4",
+      "file": "south4.webp",
+      "width": 2401,
+      "height": 2366,
+      "source": "corporate",
+      "sha256": "8d8b6957c2d7b39bb5981ee3691c3cdfc07da77794531c3638f0dbcefc52a1d6"
+    },
+    {
+      "hall": "west1",
+      "file": "west1.webp",
+      "width": 1541,
+      "height": 2401,
+      "source": "c109",
+      "sha256": "dbfece52e7d39a111b6e6459672d304195a796dec393949ab217847e33e62717"
+    },
+    {
+      "hall": "west2",
+      "file": "west2.webp",
+      "width": 1471,
+      "height": 2401,
+      "source": "c109",
+      "sha256": "2fadf23739f4f2467fee71cf92d6e3d9ab7caa49c8389e50d2ffd0ba5cee6433"
+    },
+    {
+      "hall": "west3",
+      "file": "west3.webp",
+      "width": 1628,
+      "height": 2401,
+      "source": "corporate",
+      "sha256": "875eca539a6aaf8640a1039fdd3e3011d32cff975db8a10df47e327f7f0c80b5"
+    },
+    {
+      "hall": "west4",
+      "file": "west4.webp",
+      "width": 2108,
+      "height": 805,
+      "source": "corporate",
+      "sha256": "c1f6f577231689ab1825cc2774fb2e88eac3fcd978a042bd6048231ab793b3e4"
+    }
+  ],
+  "entry_and_transfer": {
+    "entry_markers": "East and West/South zones referenced from C108. Symbolic post-admission origins, not exact checkpoints or queue paths.",
+    "outdoor_transfer": "User-referenced West 1 exit -> crossing -> rear truck yard of East halls. Simplified coordinates; not a confirmed C109 all-day general-attendee instruction.",
+    "c109_circle_route": "C109 enclosure page 2 labels the outdoor recommendation 7:30-9:00, for circle admission. Do not apply its arrows as all-day public admission guidance.",
+    "hall_interior": "West 1 gate-to-exit relationship uses a dashed segment. Interior desk aisles are not calculated."
+  }
+}

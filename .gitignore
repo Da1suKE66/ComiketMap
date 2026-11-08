@@ -45,3 +45,6 @@ yarn-error.log*
 
 # OS metadata
 .DS_Store
+
+# Local official-PDF inspection and extraction tools
+/tmp/
