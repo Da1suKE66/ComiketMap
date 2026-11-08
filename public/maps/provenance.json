@@ -31,6 +31,25 @@
         18,
         19
       ]
+    },
+    "eastStructure": {
+      "url": "https://www.bigsight.jp/organizer/facilities/pdf/E_E_all.pdf",
+      "sha256": "99bf91205180ebefb6d4bd67ec5bc841bc86dab6186d598a0a90637fcc53a597",
+      "http_status": 200,
+      "pages": 1,
+      "usage": "Independent redraw of door facades, upper galleries and floor connections. Original PDF is not redistributed."
+    },
+    "southStructure": {
+      "url": "https://www.bigsight.jp/organizer/facilities/pdf/E_S_all.pdf",
+      "sha256": "243892076997add09da6f1f563878c955b5955a77cfdcc45d38533ba7e1450f1",
+      "http_status": 200,
+      "pages": 2,
+      "usage": "Independent redraw of door facades, upper galleries and floor connections. Original PDF is not redistributed."
+    },
+    "entryGuide": {
+      "url": "https://harenohi.comiket.co.jp/index.php/beginnersguide/generals/guideonsite/",
+      "http_status": 200,
+      "usage": "C108 structural reference: main entrance, South Plaza stairs, upper corporate floors. Ticket checkpoint eligibility is not inferred."
     }
   },
   "not_published_checks": [
@@ -150,9 +169,15 @@
     }
   ],
   "entry_and_transfer": {
-    "entry_markers": "East and West/South zones referenced from C108. Symbolic post-admission origins, not exact checkpoints or queue paths.",
-    "outdoor_transfer": "User-referenced West 1 exit -> crossing -> rear truck yard of East halls. Simplified coordinates; not a confirmed C109 all-day general-attendee instruction.",
-    "c109_circle_route": "C109 enclosure page 2 labels the outdoor recommendation 7:30-9:00, for circle admission. Do not apply its arrows as all-day public admission guidance.",
-    "hall_interior": "West 1 gate-to-exit relationship uses a dashed segment. Interior desk aisles are not calculated."
+    "entry_markers": "User-specified post-admission directions: Southwest at South 3/4-side 4F lobby; East-bound and circle-ticket origins separately at the 2F main entrance area. These are not waiting areas, exact ticket checkpoints or ticket eligibility guarantees.",
+    "outdoor_transfer": "West 1 exit -> road crossing -> East 1-3 rear truck yard -> the selected hall rear gate. Does not return to a side passage or Galleria before arrival.",
+    "building_gates": "Separate Galleria-facing and truck-yard-facing gate nodes for each East 1-3 hall. Rear-door facade and two-level Galleria verified against the official East building drawing. Representative door positions, subject to event opening and controls.",
+    "floor_connections": "South 2F-4F internal escalator connection and East Galleria 2F walkway with several 1F descent points.",
+    "unmapped_hall_transfer": "Front/rear door changes inside a hall are logical links displayed as grey dashes, without directional arrows or a walking animation. Table-aisle routing is not calculated.",
+    "legacy_origin_migration": {
+      "eastEntry1": "eastEntry2",
+      "westSouthEntry2": "westSouthEntry4"
+    },
+    "c109_circle_route": "C109 enclosure page 2 labels an outdoor recommendation for circle admission at 7:30-9:00. Its arrows are not treated as all-day public admission guidance."
   }
 }

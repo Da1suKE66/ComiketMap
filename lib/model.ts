@@ -17,7 +17,9 @@ export type HallId = (typeof HALLS)[number]["id"];
 export const isCorporate = (hall: HallId) => ["west3", "west4", "south3", "south4"].includes(hall);
 export const hallFloor = (hall: HallId) => isCorporate(hall) ? 4 : 1;
 export const hallSchema = z.enum(["east1", "east2", "east3", "east7", "west1", "west2", "south1", "south2", "west3", "west4", "south3", "south4"]);
-export const routePlanSchema = z.object({ start: z.enum(["eastEntry1", "westSouthEntry2", "entrance2", "galleria1", "atrium1", "southLobby2"]), transfer: z.enum(["west1-outdoor", "indoor"]).optional(), stops: z.array(z.string().max(160)).max(200).refine(ids => new Set(ids).size === ids.length, "路线不能包含重复目标"), enabled: z.boolean() }).strict();
+const routeStartSchema = z.enum(["eastEntry2", "westSouthEntry4", "circleEntry2", "entrance2", "galleria1", "atrium1", "southLobby2", "eastEntry1", "westSouthEntry2"])
+  .transform(id => id === "eastEntry1" ? "eastEntry2" as const : id === "westSouthEntry2" ? "westSouthEntry4" as const : id);
+export const routePlanSchema = z.object({ start: routeStartSchema, transfer: z.enum(["west1-outdoor", "indoor"]).optional(), stops: z.array(z.string().max(160)).max(200).refine(ids => new Set(ids).size === ids.length, "路线不能包含重复目标"), enabled: z.boolean() }).strict();
 export type RoutePlan = z.infer<typeof routePlanSchema>;
 export const DAYS = [
   { id: 1, label: "DAY 1", date: "12.29", full: "2026-12-29", weekday: "周二" },

@@ -9,6 +9,9 @@ export const SOURCES = {
   building: { title: "东京 Big Sight 官方楼层图", url: "https://www.bigsight.jp/download/pdf/bigsight_map_color_j.pdf", checked: "2026-11-09", pages: "1F / 2F / 4F" },
   info: { title: "C109 官方馆区与时间", url: "https://www.comiket.co.jp/info-a/C109/C109Info.html", checked: "2026-11-09", pages: "场馆说明" },
   entry: { title: "C108 官方一般入场说明（临时参考）", url: "https://www.comiket.co.jp/info-a/C108/C108CtlgNotes.pdf", checked: "2026-11-09", pages: "第 10–11、18–19 页 · 东／西南入场分区" },
+  eastStructure: { title: "Big Sight 东馆建筑平面图", url: "https://www.bigsight.jp/organizer/facilities/pdf/E_E_all.pdf", checked: "2026-11-09", pages: "1F 背面各馆门／2F Galleria 与换层" },
+  southStructure: { title: "Big Sight 南馆建筑平面图", url: "https://www.bigsight.jp/organizer/facilities/pdf/E_S_all.pdf", checked: "2026-11-09", pages: "第 1–2 页 · 南馆门厅与 1F／2F／4F" },
+  entryGuide: { title: "Comiket 官方会场内部指南", url: "https://harenohi.comiket.co.jp/index.php/beginnersguide/generals/guideonsite/", checked: "2026-11-09", pages: "正门、南广场与企业馆上层连接（C108 参考）" },
 };
 // Digitized relationships from C109 Appeal Enclosure, page 2. These coordinates
 // are drawing units, never metres. The 4F footprints follow its 4F inset.
@@ -34,29 +37,41 @@ export const CLOSED_HALLS = [
 export const EAST8: Point[] = [[143,366],[168,366],[191,300],[171,294]];
 export const CORRIDORS: { name: string; floor: VenueFloor; points: Point[]; width: number }[] = [
   { name: "ガレリア / Galleria", floor: 1, points: [[168,377],[430,377]], width: 24 },
+  { name: "Galleria 上层 / 2F", floor: 2, points: [[177,377],[265,377],[344,377],[430,377]], width: 9 },
   { name: "ブリッジ / 北コンコース", floor: 2, points: [[430,377],[514,435],[579,377],[610,377]], width: 23 },
   { name: "エントランスホール", floor: 2, points: [[610,377],[665,324]], width: 29 },
   { name: "南コンコース / 2F 连廊", floor: 2, points: [[665,324],[755,324],[764,190],[754,174]], width: 13 },
   { name: "西 4F 回廊", floor: 4, points: [[650,324],[650,265],[738,265]], width: 12 },
   { name: "屋上 / 南 4F 连廊", floor: 4, points: [[738,265],[768,265],[768,178],[755,174]], width: 12 },
 ];
-export type VenueNode = { id: string; label: string; x: number; z: number; floor: VenueFloor; hall?: HallId };
+export type VenueNode = { id: string; label: string; x: number; z: number; floor: VenueFloor; hall?: HallId; gate?: "front"|"rear" };
 const nodes: VenueNode[] = [
-  { id:"eastEntry1",label:"东入场",x:38,z:411,floor:1 },
-  { id:"eastEntryApproach1",label:"东入场后馆外通道",x:38,z:377,floor:1 },
-  { id:"westSouthEntry2",label:"西南入场",x:585,z:515,floor:2 },
+  { id:"eastEntry2",label:"东入场",x:570,z:509,floor:2 },
+  { id:"circleEntry2",label:"社团票入场",x:684,z:509,floor:2 },
+  { id:"circleApproach2",label:"社团票正门通道",x:684,z:395,floor:2 },
+  { id:"westSouthEntry4",label:"西南入场",x:794,z:164,floor:4 },
+  { id:"southEntryLobby4",label:"南 3／4 侧入场门厅",x:768,z:164,floor:4 },
   { id:"entryPlaza2",label:"入口广场",x:585,z:430,floor:2 },
   { id:"entrance2",label:"入口大厅",x:610,z:377,floor:2 },
   { id:"north2",label:"北连廊",x:579,z:377,floor:2 },
   { id:"bridge2",label:"东／西联系桥",x:514,z:435,floor:2 },
   { id:"eastLobby2",label:"东馆楼梯上层",x:430,z:377,floor:2 },
+  { id:"galleriaMid2",label:"Galleria 中段 2F",x:344,z:377,floor:2 },
+  { id:"galleriaWest2",label:"Galleria 西端 2F",x:265,z:377,floor:2 },
+  { id:"linkUpper2",label:"东 7 链接空间上层",x:177,z:377,floor:2 },
   { id:"galleria1",label:"东馆 Galleria",x:430,z:377,floor:1 },
   { id:"galleriaMid1",label:"Galleria 中段",x:344,z:377,floor:1 },
   { id:"galleriaWest1",label:"Galleria 西端",x:265,z:377,floor:1 },
   { id:"link1",label:"东 7 链接空间",x:177,z:377,floor:1 },
-  { id:"east1",label:"东 1 馆口",x:430,z:365,floor:1,hall:"east1" },
-  { id:"east2",label:"东 2 馆口",x:344,z:365,floor:1,hall:"east2" },
-  { id:"east3",label:"东 3 馆口",x:265,z:365,floor:1,hall:"east3" },
+  { id:"east1",label:"东 1 Galleria 侧门",x:430,z:365,floor:1,hall:"east1",gate:"front" },
+  { id:"east2",label:"东 2 Galleria 侧门",x:344,z:365,floor:1,hall:"east2",gate:"front" },
+  { id:"east3",label:"东 3 Galleria 侧门",x:265,z:365,floor:1,hall:"east3",gate:"front" },
+  { id:"east1Rear1",label:"东 1 背面入口",x:430,z:280,floor:1,hall:"east1",gate:"rear" },
+  { id:"east2Rear1",label:"东 2 背面入口",x:344,z:280,floor:1,hall:"east2",gate:"rear" },
+  { id:"east3Rear1",label:"东 3 背面入口",x:265,z:280,floor:1,hall:"east3",gate:"rear" },
+  { id:"east1Yard1",label:"东 1 背面货车场",x:430,z:255,floor:1 },
+  { id:"east2Yard1",label:"东 2 背面货车场",x:344,z:255,floor:1 },
+  { id:"east3Yard1",label:"东 3 背面货车场",x:265,z:255,floor:1 },
   { id:"east7",label:"东 7 馆口",x:168,z:397,floor:1,hall:"east7" },
   { id:"westLobby2",label:"西馆 2F 平台",x:665,z:324,floor:2 },
   { id:"atrium1",label:"西馆中庭",x:654,z:324,floor:1 },
@@ -65,8 +80,7 @@ const nodes: VenueNode[] = [
   { id:"west1Exit1",label:"西 1 外侧出口",x:575,z:214,floor:1 },
   { id:"crosswalkWest1",label:"过街点 · 西侧",x:550,z:214,floor:1 },
   { id:"crosswalkEast1",label:"过街点 · 东侧",x:522,z:214,floor:1 },
-  { id:"eastRear1",label:"东馆背面／货车场",x:478,z:265,floor:1 },
-  { id:"eastSide1",label:"东馆侧通道",x:478,z:365,floor:1 },
+  { id:"eastRear1",label:"东馆背面／货车场",x:478,z:250,floor:1 },
   { id:"west2",label:"西 2 馆口",x:713,z:320,floor:1,hall:"west2" },
   { id:"southLink2",label:"西南 2F 连廊",x:755,z:324,floor:2 },
   { id:"southBend2",label:"南连廊转角",x:764,z:190,floor:2 },
@@ -93,21 +107,30 @@ const nodes: VenueNode[] = [
 export const VENUE_NODES = Object.fromEntries(nodes.map(n => [n.id,n])) as Record<string,VenueNode>;
 // This is a user-requested reference transfer, not a confirmed all-day C109 rule.
 // Keep it separate from the building graph: it is used only for west/south -> east.
-export const OUTDOOR_TRANSFER = ["west1", "west1Exit1", "crosswalkWest1", "crosswalkEast1", "eastRear1", "eastSide1", "galleria1"] as const;
-export const ENTRY_STARTS = ["eastEntry1", "westSouthEntry2"] as const;
-export const TRANSFER_NOTE = "西 1 外侧出口 → 过马路 → 东馆背面／货车场 → 东馆侧通道。按你的参考动线加入；C109 开会后通行口与过街位置待确认，以现场引导为准。";
-export const isHallTransfer = (a:string,b:string) => a==="west1"&&b==="west1Exit1";
+export const OUTDOOR_TRANSFER = ["west1", "west1Exit1", "crosswalkWest1", "crosswalkEast1", "eastRear1"] as const;
+export const REAR_YARD = ["eastRear1","east1Yard1","east2Yard1","east3Yard1"] as const;
+export const REAR_GATES = ["east1Rear1","east2Rear1","east3Rear1"] as const;
+export const HALL_GATES = Object.fromEntries(HALLS.map(h=>[h.id,h.id==="east1"||h.id==="east2"||h.id==="east3"?[h.id,`${h.id}Rear1`]:[h.id]])) as Record<HallId,string[]>;
+export const ENTRY_STARTS = ["eastEntry2", "westSouthEntry4", "circleEntry2"] as const;
+export const ENTRY_DETAILS = {eastEntry2:"正门广场 · 东馆方向",westSouthEntry4:"南 3／4 侧 · 4F 门厅",circleEntry2:"正门区域 · 持社团通行证"} as const;
+export const TRANSFER_NOTE = "西 1 外侧出口 → 过马路 → 东 1–3 背面货车场 → 对应馆背面入口直接进馆。背面馆门依据建筑图设置；活动当天开放哪扇门、过街位置与时段仍以现场引导为准。";
+const hallTransfers = [["west1","west1Exit1"],...REAR_GATES.map(id=>[VENUE_NODES[id].hall!,id])];
+export const isHallTransfer = (a:string,b:string) => hallTransfers.some(([from,to])=>(a===from&&b===to)||(b===from&&a===to));
 const pairs = [
   ["entrance2","north2"],["north2","bridge2"],["bridge2","eastLobby2"],["eastLobby2","galleria1"],
+  ["eastLobby2","galleriaMid2"],["galleriaMid2","galleriaWest2"],["galleriaWest2","linkUpper2"],["galleriaMid2","galleriaMid1"],["galleriaWest2","galleriaWest1"],["linkUpper2","link1"],
   ["galleria1","east1"],["galleria1","galleriaMid1"],["galleriaMid1","east2"],["galleriaMid1","galleriaWest1"],["galleriaWest1","east3"],["galleriaWest1","link1"],["link1","east7"],
   ["entrance2","westLobby2"],["westLobby2","atrium1"],["atrium1","westLower1"],["westLower1","west1"],["atrium1","west2"],
   ["westLobby2","southLink2"],["southLink2","southBend2"],["southBend2","southLobby2"],["southLobby2","south1Upper2"],["south1Upper2","south2Upper2"],["south1Upper2","south1Lower1"],["south1Lower1","south1"],["south2Upper2","south2Lower1"],["south2Lower1","south2"],
   ["westLobby2","westUpper4"],["westUpper4","westGallery4"],["westGallery4","west3"],["westGallery4","westTop4"],["westTop4","west4"],["westTop4","westRoof4"],["westRoof4","southLink4"],["southLink4","southLobby4"],["southLobby4","south3Lobby4"],["south3Lobby4","south3"],["south3Lobby4","south4Lobby4"],["south4Lobby4","south4"],
+  ["southLobby2","southLobby4"],["southEntryLobby4","southLobby4"],["southEntryLobby4","south3Lobby4"],
+  ["eastRear1","east1Yard1"],["east1Yard1","east2Yard1"],["east2Yard1","east3Yard1"],["east1Yard1","east1Rear1"],["east2Yard1","east2Rear1"],["east3Yard1","east3Rear1"],
 ] as const;
-function edge(a:string,b:string,kind:"building"|"entry"|"outdoor"="building") { return { a,b,kind,directed:kind!=="building",vertical:VENUE_NODES[a].floor !== VENUE_NODES[b].floor, cost: Math.hypot(VENUE_NODES[a].x-VENUE_NODES[b].x,VENUE_NODES[a].z-VENUE_NODES[b].z)+Math.abs(VENUE_NODES[a].floor-VENUE_NODES[b].floor)*32 }; }
-export const VENUE_EDGES = [...pairs.map(([a,b])=>edge(a,b)),edge("eastEntry1","eastEntryApproach1","entry"),edge("eastEntryApproach1","link1","entry"),edge("westSouthEntry2","entryPlaza2","entry"),edge("entryPlaza2","entrance2","entry"),...OUTDOOR_TRANSFER.slice(1).map((id,i)=>edge(OUTDOOR_TRANSFER[i],id,"outdoor"))];
+function edge(a:string,b:string,kind:"building"|"entry"|"outdoor"|"hall"="building") { return { a,b,kind,directed:kind==="entry"||kind==="outdoor",vertical:VENUE_NODES[a].floor !== VENUE_NODES[b].floor, cost: Math.hypot(VENUE_NODES[a].x-VENUE_NODES[b].x,VENUE_NODES[a].z-VENUE_NODES[b].z)+Math.abs(VENUE_NODES[a].floor-VENUE_NODES[b].floor)*32+(kind==="hall"?80:0) }; }
+export const VENUE_EDGES = [...pairs.map(([a,b])=>edge(a,b)),edge("eastEntry2","entryPlaza2","entry"),edge("entryPlaza2","entrance2","entry"),edge("circleEntry2","circleApproach2","entry"),edge("circleApproach2","entrance2","entry"),edge("westSouthEntry4","southEntryLobby4","entry"),...OUTDOOR_TRANSFER.slice(1).map((id,i)=>edge(OUTDOOR_TRANSFER[i],id,i===0?"hall":"outdoor")),...REAR_GATES.map(id=>edge(VENUE_NODES[id].hall!,id,"hall"))];
 export const STARTS = [...ENTRY_STARTS,"entrance2","galleria1","atrium1","southLobby2"] as const;
 export const isEastNode = (id:string) => id.startsWith("east")||id.startsWith("galleria")||id==="link1";
+export const isWestSouthNode = (id:string) => id.startsWith("west")||id.startsWith("south")||id==="atrium1";
 export const polygonPath = (p:Point[]) => p.map((v,i) => `${i ? "L" : "M"}${v[0]},${v[1]}`).join(" ")+"Z";
 export function hallBounds(hall: HallId) { const p=FOOTPRINTS[hall];const x=Math.min(...p.map(v=>v[0])),z=Math.min(...p.map(v=>v[1]));return {x,z,w:Math.max(...p.map(v=>v[0]))-x,h:Math.max(...p.map(v=>v[1]))-z}; }
 export function hallCenter(hall: HallId):Point { const b=hallBounds(hall);return [b.x+b.w/2,b.z+b.h/2]; }
