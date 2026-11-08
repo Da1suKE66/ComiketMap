@@ -1,4 +1,5 @@
 import { dataSchema, type AppData, type ImageAsset, uid } from "./model";
+import type { NotebookFileHandle } from "./local-file";
 let connection: Promise<IDBDatabase> | null = null;
 function database() {
   if (!connection) connection = new Promise<IDBDatabase>((resolve, reject) => {
@@ -18,6 +19,14 @@ export async function loadData(): Promise<AppData | null> {
 }
 export async function saveData(data: AppData) {
   const db = await database(); return new Promise<void>((resolve, reject) => { const tx = db.transaction("notebook", "readwrite"); tx.objectStore("notebook").put(data, "data"); tx.oncomplete = () => resolve(); tx.onerror = () => reject(tx.error); tx.onabort = () => reject(tx.error); });
+}
+export async function loadFileHandle(): Promise<NotebookFileHandle | null> {
+  const db = await database();
+  return new Promise((resolve, reject) => { const r = db.transaction("notebook").objectStore("notebook").get("fileHandle"); r.onsuccess = () => resolve(r.result ?? null); r.onerror = () => reject(r.error); });
+}
+export async function saveFileHandle(handle: NotebookFileHandle | null) {
+  const db = await database();
+  return new Promise<void>((resolve, reject) => { const tx = db.transaction("notebook", "readwrite"); const store = tx.objectStore("notebook"); if (handle) store.put(handle, "fileHandle"); else store.delete("fileHandle"); tx.oncomplete = () => resolve(); tx.onerror = () => reject(tx.error); tx.onabort = () => reject(tx.error); });
 }
 export async function readImage(file: File): Promise<ImageAsset> {
   if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) throw new Error("请选择 PNG、JPG 或 WebP 图片");

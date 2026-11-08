@@ -28,7 +28,7 @@ test("A and B purchases are independent and persist after reload; CSV is downloa
   const rowB = page.locator("tbody tr").filter({ hasText: "雨のあとで" }).filter({ has: page.getByText("B", { exact: true }) });
   await rowA.getByRole("button", { name: /记为购齐/ }).click();
   await expect(rowA.getByRole("spinbutton")).toHaveValue("1"); await expect(rowB.getByRole("spinbutton")).toHaveValue("0");
-  await expect(page.getByText("已保存到本地", { exact: true })).toBeVisible(); await page.reload();
+  await expect(page.getByText("已缓存 · 未绑定文件", { exact: true })).toBeVisible(); await page.reload();
   await page.getByRole("button", { name: "购买清单", exact: true }).click(); await expect(rowA.getByRole("spinbutton")).toHaveValue("1"); await expect(rowB.getByRole("spinbutton")).toHaveValue("0");
   const pending = page.waitForEvent("download"); await page.getByRole("button", { name: "导出 CSV", exact: true }).click(); const file = await pending; expect(file.suggestedFilename()).toBe("C109-购买清单.csv");
   const data = await stored(page); expect(data.booths[0].items[0].orders.map(o => o.purchased)).toEqual([1, 0]);
@@ -44,14 +44,14 @@ test("create a booth, upload an image, allocate quantities, position, edit and d
   await expect(dialog.locator(".allocation-row")).toHaveCount(3); await dialog.getByLabel("商品 1 B 代购数量").fill("2"); await dialog.getByRole("button", { name: "保存摊位", exact: true }).click();
   const detail = page.getByRole("dialog", { name: "测试社团", exact: true }); await expect(detail).toBeVisible(); await expect(detail.locator(".form-total")).toContainText("¥4,000"); await expect(detail.locator(".detail-images img")).toHaveCount(1);
   await detail.getByRole("button", { name: "地图定位", exact: true }).click(); await expect(page.locator(".placing-banner")).toBeVisible(); await page.locator(".venue-svg").click({ position: { x: 350, y: 230 } }); await expect(page.locator(".placing-banner")).toHaveCount(0);
-  await expect(page.getByText("已保存到本地", { exact: true })).toBeVisible(); let data = await stored(page); const b = data.booths.find(b => b.circle === "测试社团")!; expect(b.x).not.toBeNull(); expect(b.images[0].src).toMatch(/^data:image\/jpeg/); expect(b.items[0].orders.map(o => o.quantity)).toEqual([1, 2]);
+  await expect(page.getByText("已缓存 · 未绑定文件", { exact: true })).toBeVisible(); let data = await stored(page); const b = data.booths.find(b => b.circle === "测试社团")!; expect(b.x).not.toBeNull(); expect(b.images[0].src).toMatch(/^data:image\/jpeg/); expect(b.items[0].orders.map(o => o.quantity)).toEqual([1, 2]);
   await page.reload(); await page.getByLabel("搜索摊位").fill("测试社团"); await page.locator(".booth-card-main").click();
   await page.getByRole("button", { name: "编辑摊位", exact: true }).click(); await page.getByLabel("画师名称", { exact: true }).fill("更新画师"); await page.getByRole("button", { name: "保存摊位", exact: true }).click(); await expect(page.getByRole("dialog", { name: "测试社团", exact: true })).toContainText("更新画师");
   await page.getByRole("button", { name: "编辑摊位", exact: true }).click(); await page.getByRole("button", { name: "删除摊位", exact: true }).click(); await page.getByRole("button", { name: "确认删除", exact: true }).click(); await expect(page.locator(".booth-card")).toHaveCount(0);
 });
 test("backup export contains images and allocations, imports are previewed and invalid imports preserve existing data", async ({ page }) => {
-  await open(page); await page.getByRole("button", { name: "导入 / 备份" }).click();
-  const pending = page.waitForEvent("download"); await page.getByRole("button", { name: /导出完整备份/ }).click(); const backup = await pending; expect(backup.suggestedFilename()).toMatch(/\.json$/);
+  await open(page); await page.getByRole("button", { name: "手帐文件", exact: true }).click();
+  const pending = page.waitForEvent("download"); await page.getByRole("button", { name: /下载额外备份/ }).click(); const backup = await pending; expect(backup.suggestedFilename()).toMatch(/\.json$/);
   const incoming = demoData(); incoming.booths[0].circle = "从备份恢复的社团";
   await page.locator('input[type="file"][accept="application/json,.json"]').setInputFiles({ name: "backup.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify(incoming)) });
   await expect(page.getByRole("dialog", { name: "导入这份手帐？" })).toBeVisible(); await expect(page.locator(".booth-card").filter({ hasText: "从备份恢复的社团" })).toHaveCount(0); await page.getByRole("button", { name: "确认替换并导入", exact: true }).click(); await expect(page.locator(".booth-card").filter({ hasText: "从备份恢复的社团" })).toHaveCount(1);
@@ -64,7 +64,7 @@ test("recipient lifecycle, duplicate protection and referenced deletion protecti
 });
 test("hall background uploads and 390px mobile layout remain usable", async ({ page }) => {
   await open(page); await page.locator(".hall-tabs").getByRole("button", { name: /^东 1/ }).click();
-  await page.locator('.map-legend input[type="file"]').setInputFiles({ name: "hall.png", mimeType: "image/png", buffer: pixel }); await expect(page.locator(".venue-svg image")).toHaveCount(1); await expect(page.getByText("已保存到本地", { exact: true })).toBeVisible(); await page.reload();
+  await page.locator('.map-legend input[type="file"]').setInputFiles({ name: "hall.png", mimeType: "image/png", buffer: pixel }); await expect(page.locator(".venue-svg image")).toHaveCount(1); await expect(page.getByText("已缓存 · 未绑定文件", { exact: true })).toBeVisible(); await page.reload();
   await page.locator(".hall-tabs").getByRole("button", { name: /^东 1/ }).click(); await expect(page.locator(".venue-svg image")).toHaveCount(1);
   await page.setViewportSize({ width: 390, height: 844 }); await expect(page.getByRole("button", { name: "打开导航" })).toBeVisible(); expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
   await page.getByRole("button", { name: "打开导航" }).click(); await page.getByRole("button", { name: "购买清单", exact: true }).click(); await expect(page.locator(".ledger-panel")).toBeVisible();
