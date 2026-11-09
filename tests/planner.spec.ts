@@ -2,7 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import { demoData } from "../lib/demo";
 
 const pixel = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a84sAAAAASUVORK5CYII=", "base64");
-async function open(page: Page) { await page.goto("/"); await expect(page.getByText("先逛逛示例手帐", { exact: true })).toBeVisible(); await page.getByRole("button", { name: "拓扑图", exact: true }).click(); }
+async function open(page: Page) { await page.goto("/"); await expect(page.getByText("示例数据", { exact: true })).toBeVisible(); await page.getByRole("button", { name: "拓扑图", exact: true }).click(); }
 async function stored(page: Page) {
   return page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => { const r = indexedDB.open("comipath-c109", 1); r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error); });
@@ -35,7 +35,7 @@ test("A and B purchases are independent and persist after reload; CSV is downloa
 });
 test("create a booth, upload an image, allocate quantities, position, edit and delete", async ({ page }) => {
   await open(page); await page.getByRole("button", { name: "添加摊位", exact: true }).click();
-  const dialog = page.getByRole("dialog", { name: "添加一个心动摊位" });
+  const dialog = page.getByRole("dialog", { name: "添加摊位" });
   await dialog.getByLabel("サークル / 社团名称").fill("测试社团"); await dialog.getByLabel("画师名称", { exact: true }).fill("测试画师");
   await dialog.getByLabel("区域 / ブロック").fill("ア"); await dialog.getByLabel("摊位号 / スペース").fill("01a"); await dialog.getByLabel("画师粉丝数").fill("10000");
   await dialog.getByRole("button", { name: /品书图片/ }).click(); await dialog.locator('input[type="file"]').setInputFiles({ name: "menu.png", mimeType: "image/png", buffer: pixel }); await expect(dialog.locator(".image-tile")).toHaveCount(1);

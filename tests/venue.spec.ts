@@ -1,6 +1,6 @@
 import {test,expect,type Page} from "@playwright/test";
 import {HALLS,isCorporate} from "../lib/model";
-async function start(page:Page){await page.goto("/");await expect(page.getByText("先逛逛示例手帐",{exact:true})).toBeVisible();}
+async function start(page:Page){await page.goto("/");await expect(page.getByText("示例数据",{exact:true})).toBeVisible();}
 async function add(page:Page,value:string){await page.getByLabel("添加路线目标").selectOption(value);await page.getByRole("button",{name:"加入路线",exact:true}).click();}
 
 test("real 3D canvas rotates, switches floors and animates the route without errors",async({page})=>{
@@ -26,7 +26,7 @@ test("390px layout keeps 3D controls and corporate maps available without page o
  await page.setViewportSize({width:390,height:844});await start(page);await expect(page.locator(".three-stage")).toHaveAttribute("data-ready","true");expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);await page.locator(".hall-tabs").getByRole("button",{name:/^南 4/}).click();await expect(page.locator(".reference-badge")).toContainText("C108");expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
 });
 test("entry shortcuts, the outdoor crossing and the alternative route are saved per day",async({page})=>{
- await start(page);await page.getByRole("button",{name:"从西南入场开始",exact:true}).click();await expect(page.getByLabel("路线起点")).toHaveValue("westSouthEntry4");await page.getByRole("button",{name:"清空路线",exact:true}).click();await add(page,"hall:east2");await expect(page.locator(".route-transfer-note")).toContainText("对应馆背面入口直接进馆");await page.getByText("展开每段走法",{exact:true}).click();await expect(page.locator(".route-directions")).toContainText("过街点 · 东侧");
+ await start(page);await page.getByRole("button",{name:"从西南入场开始",exact:true}).click();await expect(page.getByLabel("路线起点")).toHaveValue("westSouthEntry4");await page.getByRole("button",{name:"清空路线",exact:true}).click();await add(page,"hall:east2");await expect(page.locator(".route-transfer-note")).toContainText("背门直入");await page.getByText("展开每段走法",{exact:true}).click();await expect(page.locator(".route-directions")).toContainText("过街点 · 东侧");
  await page.getByRole("button",{name:"拓扑图",exact:true}).click();await expect(page.locator(".entry-marker")).toHaveCount(3);await expect(page.locator(".outdoor-reference")).toBeVisible();await page.getByRole("button",{name:"以东入场为起点",exact:true}).click();await expect(page.getByLabel("路线起点")).toHaveValue("eastEntry2");await expect(page.locator(".route-transfer-note")).toHaveCount(0);
  await page.getByLabel("路线起点").selectOption("westSouthEntry4");await page.getByLabel("跨区走法").selectOption("indoor");await expect(page.locator(".route-transfer-note")).toHaveCount(0);await page.reload();await start(page);await page.getByRole("button",{name:/^我的路线/}).click();await expect(page.getByLabel("路线起点")).toHaveValue("westSouthEntry4");await expect(page.getByLabel("跨区走法")).toHaveValue("indoor");await page.getByLabel("跨区走法").selectOption("west1-outdoor");await expect(page.locator(".route-transfer-note")).toContainText("1 次室外过街");
 });

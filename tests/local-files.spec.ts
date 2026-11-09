@@ -17,7 +17,7 @@ async function installPickers(page: Page) {
     Object.defineProperty(window, "showOpenFilePicker", { configurable: true, value: async () => [await (await navigator.storage.getDirectory()).getFileHandle(target())] });
   });
 }
-async function start(page: Page) { await installPickers(page); await page.goto("/"); await expect(page.getByText("先逛逛示例手帐", { exact: true })).toBeVisible(); }
+async function start(page: Page) { await installPickers(page); await page.goto("/"); await expect(page.getByText("示例数据", { exact: true })).toBeVisible(); }
 async function fileData(page: Page, name = "ComiPath-C109.json") {
   return page.evaluate(async name => JSON.parse(await (await (await navigator.storage.getDirectory()).getFileHandle(name)).getFile().then(f => f.text())), name);
 }
@@ -51,14 +51,14 @@ test("permission revocation never reports success and explicit retry writes reco
   await page.getByRole("button", { name: "购买清单", exact: true }).click(); const a = page.locator("tbody tr").filter({ hasText: "雨のあとで" }).filter({ has: page.getByText("A", { exact: true }) }); await a.getByRole("button", { name: /记为购齐/ }).click(); await expect(page.getByText("尚未保存到文件", { exact: true })).toBeVisible(); expect((await fileData(page)).booths[0].items[0].orders[0].purchased).toBe(0);
   await page.evaluate(() => sessionStorage.removeItem("test-file-denied")); await page.getByRole("button", { name: "手帐文件", exact: true }).click();
   await page.getByRole("button", { name: "重试保存", exact: true }).click(); await expect(page.getByText("已写回 ComiPath-C109.json", { exact: true })).toBeVisible(); expect((await fileData(page)).booths[0].items[0].orders[0].purchased).toBe(1);
-  await page.getByRole("button", { name: "知道了", exact: true }).click();
+  await page.getByRole("button", { name: "关闭", exact: true }).click();
   // Save As preserves allocations while changing the file used for future edits.
   await page.getByRole("button", { name: "手帐文件", exact: true }).click(); await page.evaluate(() => sessionStorage.setItem("test-file-name", "recovered.json")); await page.getByRole("button", { name: "另存为…", exact: true }).click(); await expect(page.getByText("已写回 recovered.json", { exact: true })).toBeVisible(); expect((await fileData(page, "recovered.json")).booths[0].items[0].orders[0].purchased).toBe(1);
 });
 test("an external file modification is detected and never overwritten automatically", async ({ page }) => {
   await start(page); await page.getByRole("button", { name: "选择保存文件", exact: true }).click(); await expect(page.getByText("已写回 ComiPath-C109.json", { exact: true })).toBeVisible();
   const external = demoData(); external.booths[0].circle = "外部编辑的社团，不得覆盖"; await seedFile(page, "ComiPath-C109.json", JSON.stringify(external));
-  await page.getByRole("button", { name: "立即保存", exact: true }).click(); await expect(page.locator(".local-file-bar")).toContainText("目标文件已被其他程序"); expect((await fileData(page)).booths[0].circle).toBe("外部编辑的社团，不得覆盖");
+  await page.getByRole("button", { name: "手帐文件", exact: true }).click(); await page.getByRole("button", { name: "立即保存", exact: true }).click(); await expect(page.locator(".local-file-bar")).toContainText("目标文件已被其他程序"); expect((await fileData(page)).booths[0].circle).toBe("外部编辑的社团，不得覆盖");
 });
 test("refresh with expired permission requires reconnecting without changing the file", async ({ page }) => {
   await start(page); await page.getByRole("button", { name: "选择保存文件", exact: true }).click(); await expect(page.getByText("已写回 ComiPath-C109.json", { exact: true })).toBeVisible(); const before = await fileData(page);

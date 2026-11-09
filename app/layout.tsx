@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "ComiPath · C109 参展手帐",
-  description: "把喜欢的画师，放进你的冬日旅程。C109 场馆地图、摊位记录、品书与代购清单。",
+  description: "C109 场馆地图、路线规划、摊位记录与购买清单。",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
