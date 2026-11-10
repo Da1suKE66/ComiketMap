@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { loadData, loadFileHandle, saveData, saveFileHandle } from "./db";
-import { demoData } from "./demo";
 import { dataSchema, emptyData, type AppData } from "./model";
 import { cleanRoutePlans } from "./routes";
 import { createNotebookFile, grantFilePermission, isPickerCancelled, pickOpenFile, pickSaveFile, readNotebookFile, supportsLocalFiles, writeNotebookFile, type FileBinding, type NotebookFileHandle } from "./local-file";
@@ -39,7 +38,7 @@ export default function useNotebook(notify: (message: string) => void) {
         remembered.current = handle; setFileName(handle.name);
         try {
           if (await handle.queryPermission({ mode: "readwrite" }) !== "granted") {
-            if (!active) return; update(stored ?? demoData()); setFileStatus("permission"); setSaveState("saved"); return;
+            if (!active) return; update(stored ?? emptyData()); setFileStatus("permission"); setSaveState("saved"); return;
           }
           const disk = await readNotebookFile(handle); if (!active) return;
           if (stored && hasRecoveryChanges(stored, disk.data)) {
@@ -51,7 +50,7 @@ export default function useNotebook(notify: (message: string) => void) {
         }
       }
       if (cached.status === "rejected") { setLoadError("浏览器缓存读取失败，请打开本地手帐或导入备份；也可以选择文件创建空白手帐。"); setSaveState("error"); return; }
-      const initial = stored ?? demoData(); update(initial); setSaveState("saved"); if (!stored) await cache(initial);
+      const initial = stored ?? emptyData(); update(initial); setSaveState("saved"); if (!stored) await cache(initial);
     })().catch(e => { if (active) { setLoadError((e as Error).message); setSaveState("error"); } });
     return () => { active = false; };
   }, []);

@@ -50,14 +50,21 @@ export const boothSchema = z.object({
   xHandle: z.string().max(120), notes: z.string().max(4000), images: z.array(imageSchema).max(15), items: z.array(itemSchema).max(100),
 }).strict().refine(b => (b.x === null) === (b.y === null), "地图坐标需要同时设置").refine(b => isCorporate(b.hall) ? /^\d{3,5}$/.test(b.space) : b.block.trim().length > 0 && /^\d{2}(?:a|b|ab)?$/.test(b.space), "同人摊位需区域与两位数字摊位号（如 ア / 24a）；企业馆需 3–5 位企业编号");
 export const recipientSchema = z.object({ id, name: z.string().min(1).max(80), note: z.string().max(500) }).strict();
+export const boothDraftSchema = z.object({
+  id, circle: z.string().min(1).max(120), artist: text,
+  day: z.union([z.literal(1), z.literal(2), z.literal(3)]).nullable(), hall: hallSchema.nullable(),
+  block: z.string().max(8), space: z.string().max(5), xHandle: z.string().max(120), notes: z.string().max(4000),
+}).strict();
 export const dataSchema = z.object({
   version: z.literal(1), demo: z.boolean(), updatedAt: z.string().datetime(), booths: z.array(boothSchema).max(2000), recipients: z.array(recipientSchema).max(200),
+  boothDrafts: z.array(boothDraftSchema).max(2000).optional(),
   floorplans: z.object({ east1: imageSchema.optional(), east2: imageSchema.optional(), east3: imageSchema.optional(), east7: imageSchema.optional(), west1: imageSchema.optional(), west2: imageSchema.optional(), south1: imageSchema.optional(), south2: imageSchema.optional(), west3: imageSchema.optional(), west4: imageSchema.optional(), south3: imageSchema.optional(), south4: imageSchema.optional() }).strict(),
   routePlans: z.object({ "1": routePlanSchema.optional(), "2": routePlanSchema.optional(), "3": routePlanSchema.optional() }).strict().optional(),
 }).strict().superRefine((data, ctx) => {
   const ids = new Set<string>();
   const register = (value: string) => { if (ids.has(value)) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "备份包含重复的记录 ID" }); ids.add(value); };
   data.recipients.forEach(r => register(r.id));
+  data.boothDrafts?.forEach(d => register(d.id));
   if (new Set(data.recipients.map(r => r.name.trim().toLocaleLowerCase())).size !== data.recipients.length) ctx.addIssue({ code: z.ZodIssueCode.custom, message: "代购对象名称重复" });
   const recipients = new Set(data.recipients.map(r => r.id));
   for (const b of data.booths) {
@@ -79,6 +86,7 @@ export const dataSchema = z.object({
   }
 });
 export type Booth = z.infer<typeof boothSchema>;
+export type BoothDraft = z.infer<typeof boothDraftSchema>;
 export type Item = z.infer<typeof itemSchema>;
 export type Order = z.infer<typeof orderSchema>;
 export type Recipient = z.infer<typeof recipientSchema>;
@@ -97,6 +105,11 @@ export function totals(booths: Booth[]) {
 }
 export function emptyData(): AppData { return { version: 1, demo: false, updatedAt: new Date().toISOString(), booths: [], recipients: [], floorplans: {} }; }
 export function newBooth(): Booth { return { id: uid(), circle: "", artist: "", day: 1, hall: "east1", block: "", space: "", fans: null, priority: "want", status: "pending", visit: "planned", x: null, y: null, xHandle: "", notes: "", images: [], items: [] }; }
+export function newBoothDraft(): BoothDraft { return { id: uid(), circle: "", artist: "", day: null, hall: null, block: "", space: "", xHandle: "", notes: "" }; }
+export function completeBoothDraft(draft: BoothDraft): Booth | null {
+  const result = boothSchema.safeParse({ ...newBooth(), ...draft });
+  return result.success ? result.data : null;
+}
 export function newItem(): Item { return { id: uid(), name: "", kind: "本子", price: null, selfQuantity: 1, selfPurchased: 0, orders: [] }; }
 export function csvText(rows: (string | number)[][]) { return "\uFEFF" + rows.map(row => row.map(cell => { const value = String(cell); return `"${(/^[\s]*[=+@-]/.test(value) ? "'" + value : value).replaceAll('"', '""')}"`; }).join(",")).join("\r\n"); }
 export function download(name: string, data: BlobPart, type: string) { const url = URL.createObjectURL(new Blob([data], { type })); const a = document.createElement("a"); a.href = url; a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(url), 2000); }

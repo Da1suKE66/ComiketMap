@@ -32,3 +32,9 @@
 @media(max-width:760px){.compact-ui main{padding-top:18px}.compact-ui .page-heading{gap:12px;margin-bottom:16px}.compact-ui .page-heading h1{font-size:22px}.compact-ui .scene-controls{gap:10px}.compact-ui .scene-controls>label,.compact-ui .scene-controls select,.compact-ui .scene-controls .text-button{font-size:10px}.compact-ui .scene-controls select{max-width:126px}.compact-ui .entry-shortcuts{gap:8px}.compact-ui .entry-shortcuts button{font-size:10px;padding:5px 8px}.compact-ui .local-file-actions{margin-left:0}.compact-ui .demo-banner strong,.compact-ui .demo-banner button{font-size:10px}.compact-ui .demo-banner>span>span{display:none}.compact-ui .reference-badge{font-size:9px}}
 
 .compact-ui .modal-title h2{margin:0;font-size:17px}.compact-ui .detail-notes h3{font-size:12px;margin-bottom:6px}
+
+/* Names awaiting a confirmed date and address stay separate from routes. */
+.draft-section{margin-top:32px;padding-top:24px;border-top:1px solid var(--line)}
+.draft-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:12px}
+.draft-card{display:flex;align-items:center;justify-content:space-between;gap:16px;text-align:left;padding:18px;border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink)}
+.draft-card>span{display:grid;gap:7px}.draft-card strong{font-size:16px}.draft-card>span>span{font-size:13px;color:var(--muted)}.draft-card:hover{border-color:var(--green)}

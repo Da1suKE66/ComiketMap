@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { demoData } from "../lib/demo";
+import { openDemo } from "./fixtures";
 
 // Replace only the native OS pickers/permission prompts. All reads, writes and
 // persisted handles below use Chromium's real File System API and IndexedDB.
@@ -17,7 +18,7 @@ async function installPickers(page: Page) {
     Object.defineProperty(window, "showOpenFilePicker", { configurable: true, value: async () => [await (await navigator.storage.getDirectory()).getFileHandle(target())] });
   });
 }
-async function start(page: Page) { await installPickers(page); await page.goto("/"); await expect(page.getByText("示例数据", { exact: true })).toBeVisible(); }
+async function start(page: Page) { await installPickers(page); await openDemo(page); }
 async function fileData(page: Page, name = "ComiPath-C109.json") {
   return page.evaluate(async name => JSON.parse(await (await (await navigator.storage.getDirectory()).getFileHandle(name)).getFile().then(f => f.text())), name);
 }

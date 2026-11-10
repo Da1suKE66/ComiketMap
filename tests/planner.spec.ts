@@ -1,8 +1,9 @@
 import { test, expect, type Page } from "@playwright/test";
 import { demoData } from "../lib/demo";
+import { openDemo } from "./fixtures";
 
 const pixel = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a84sAAAAASUVORK5CYII=", "base64");
-async function open(page: Page) { await page.goto("/"); await expect(page.getByText("示例数据", { exact: true })).toBeVisible(); await page.getByRole("button", { name: "拓扑图", exact: true }).click(); }
+async function open(page: Page) { await openDemo(page); await page.getByRole("button", { name: "拓扑图", exact: true }).click(); }
 async function stored(page: Page) {
   return page.evaluate(async () => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => { const r = indexedDB.open("comipath-c109", 1); r.onsuccess = () => resolve(r.result); r.onerror = () => reject(r.error); });

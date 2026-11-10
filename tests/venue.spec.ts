@@ -1,6 +1,7 @@
 import {test,expect,type Page} from "@playwright/test";
 import {HALLS,isCorporate} from "../lib/model";
-async function start(page:Page){await page.goto("/");await expect(page.getByText("示例数据",{exact:true})).toBeVisible();}
+import {openDemo} from "./fixtures";
+async function start(page:Page){await openDemo(page);}
 async function add(page:Page,value:string){await page.getByLabel("添加路线目标").selectOption(value);await page.getByRole("button",{name:"加入路线",exact:true}).click();}
 
 test("real 3D canvas rotates, switches floors and animates the route without errors",async({page})=>{

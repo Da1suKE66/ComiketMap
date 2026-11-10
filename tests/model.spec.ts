@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { demoData } from "../lib/demo";
-import { csvText, dataSchema, itemPurchased, itemTotal, totals } from "../lib/model";
+import { completeBoothDraft, csvText, dataSchema, emptyData, itemPurchased, itemTotal, newBoothDraft, totals } from "../lib/model";
 
 test("A and B retain separate quantities, planned costs and actual costs", () => {
   const data = demoData(); const booth = data.booths[0], item = booth.items[0];
@@ -36,4 +36,15 @@ test("JSON roundtrip preserves images, positions and per-person purchases", () =
 test("CSV safely escapes formulas, commas, quotes and multiline names", () => {
   const result = csvText([["=SUM(A1)", "@user", "A, B", 'say "hi"', "a\nb"]]);
   expect(result).toContain('"\'=SUM(A1)"'); expect(result).toContain('"\'@user"'); expect(result).toContain('"A, B"'); expect(result).toContain('"say ""hi"""'); expect(result).toContain('"a\nb"');
+});
+test("unassigned names roundtrip without a fabricated day or hall and promote only with a valid address", () => {
+  const draft = { ...newBoothDraft(), circle: "未公布地点的画师", artist: "画师", xHandle: "example", notes: "等更新" };
+  const data = { ...emptyData(), boothDrafts: [draft] };
+  expect(dataSchema.parse(JSON.parse(JSON.stringify(data)))).toEqual(data);
+  expect(completeBoothDraft(draft)).toBeNull();
+  expect(completeBoothDraft({ ...draft, day: 3, hall: "east3", block: "ア", space: "64ab" })).toMatchObject({ id: draft.id, day: 3, hall: "east3", block: "ア", space: "64ab", xHandle: "example", notes: "等更新", images: [], items: [] });
+  expect(completeBoothDraft({ ...draft, day: 1, hall: "east1", block: "ア", space: "invalid" })).toBeNull();
+  const conflict = demoData(); conflict.boothDrafts = [{ ...draft, id: conflict.booths[0].id }];
+  expect(dataSchema.safeParse(conflict).success).toBe(false);
+  expect(dataSchema.safeParse({ ...data, routePlans: { "1": { start: "eastEntry2", enabled: true, stops: [`booth:${draft.id}`] } } }).success).toBe(false);
 });
